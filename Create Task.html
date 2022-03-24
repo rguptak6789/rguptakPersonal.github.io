@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Guess the Location of the Beast</title>
+<style>
+    h1 {
+      background-color: rgb(38, 190, 24);
+      color: black;
+      width: 403px;
+      text-align: center;
+      padding: 5px;
+    }
+  </style>
+</head>
+<body>
+    <h1>Welcome to the Beast Location Guessing Game</h1>
+<table>
+    <tr>
+        <td style="height:200px;width:200px">
+            <img src="https://bit.ly/2OGDYWm">
+        </td>
+        <td style="height:250px;width:500px">
+            <p>The game is meant to simulate a hide and seek game. The monster is at a random location on a number line
+                 that is 1000 units long(x-axis). The difficulty options are easy, medium, and hard. 
+                 The difficulty you choose dictates the amount of guesses you get. You will win if you can guess the correct 
+                coordinate(x-axis value) close (within 30 units) to the beast's location. If your guess is incorrect, 
+                the system will provide a hint by indicating if your x-coordinate is too high or too low. 
+                You may randomly receive a bonus which will give you an idea of where the Beast's location
+                is. Refresh the page if you want to play again.   </p> 
+        </td>
+        <td>
+            <img src="https://bit.ly/328L893" width = "200" height ="200">
+        </td>
+    </tr>
+        <tr>
+            <td>
+                <label for="bonusNumber"> Enter your lucky number between 0 and 8 (includes 0):</label>
+                    <input type="text" name="bonusNumber" id="bonusNumber"> <br>
+                <label for="luckTest">Test your luck before playing the game:</label>
+                <button type="button" name = "luckTest" onClick="bonusAnalysis(document.getElementById('bonusNumber').value)">Go</button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="difficulty">Enter your difficulty:</label>
+                <input type="text" name="difficulty" id="difficulty">
+                <label for = "difficultyBox">Click this box to see the amount of guesses you get</label>
+                <button type="button" onClick = "getDifficulty()" >Go</button>
+            </td>
+        </tr>    
+        <tr>
+                <td>
+                    <label for="guess">Enter your x-position location guess:</label>
+                    <input type="number" name="guess" id="guess">
+                </td>
+            </tr>
+                <td>
+                    <label for="Go">Press to see if your guess is correct</label>
+                    <button type="button" onClick="mainGame()">Go</button>
+                </td>
+            <tr>
+                <td>
+                    <label for="Go">Press to see if you qualify for bonus</label>
+                    <button type="button" onClick="bonusButton(document.getElementById('bonusNumber').value)">Go</button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for = "output">System Feedback:</label>
+                    <textarea id="output" name="outputText"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for = "bonus">Bonus?</label> <br>
+                    <textarea id="bonus" name="outputTest"></textarea>
+                </td>
+                <td>
+                    <label for ="bonusTest">How lucky are you?</label><br>
+                    <textarea id="bonusTest" name="outputTest"></textarea>
+
+
+                </td>
+            </tr>
+</table>
+<script>
+    //Assign monster Location
+    var monsterLocation = Math.floor(Math.random() * 1001);
+    var bonusArray = [ "F", "F", "F", "T", "F", "F", "T", "F"];
+    var guesses = 0;
+    var bonusCounter = 0;
+    //For testing purposes, the monster's real location is displayed
+    document.getElementById("output").value = monsterLocation;
+    function getDifficulty(difficulty) {
+        numberofRound = 0;
+        difficultyAssigned = false;
+        //check difficulty and assign number of guesses the user gets based on that
+        var difficulty = document.getElementById("difficulty").value;
+            if (difficulty == "easy"){
+            numberOfRounds = 8;
+            difficultyAssigned = true;
+        }   else if (difficulty == "medium"){
+            numberOfRounds = 6;
+            difficultyAssigned = true;
+        }   else if (difficulty == "hard"){
+            numberOfRounds = 4;
+            difficultyAssigned = true;
+        }
+        //Notify the user on how many the guesses the user gets or if the user has entered a wrong value
+        if (difficultyAssigned==true){
+        document.getElementById("output").value = "You have" + " " + numberOfRounds + " " + "guesses";
+        }
+        else if (difficultyAssigned==false) {
+            document.getElementById("output").value = "Please enter easy, medium, or hard in difficulty field.";
+        }
+        return numberOfRounds;
+    }
+    function mainGame (xposGuess){
+        //Collect the guess from the user
+        var xposGuess = document.getElementById("guess").value;
+        totalGuesses = getDifficulty(document.getElementById("difficulty").value);
+        //Make sure the user has entered a difficulty
+        if (numberOfRounds = 0){
+            document.getElementById("output") = "Please enter a correct difficulty first"
+        }
+        //Check to see if the user has entered an acceptable number
+        if (xposGuess<0 || xposGuess>1000){
+            document.getElementById("output").value = " Please enter any number that is less than 1001 but greater than or equal to 0 in the number field.";
+            guesses ++;
+            document.getElementById("output").value += " You have" + " " +  (totalGuesses-guesses) + " " + "guesses";
+
+        }
+        //Check to see if the user has won the game
+        else if (xposGuess>=monsterLocation-30 && xposGuess<=monsterLocation+30){
+            document.getElementById("output").value = "Congrats you have won the game!";
+        } 
+        //Assign a hint based on the comparision between the user's guess and the real monster location
+        else if (xposGuess>monsterLocation) {
+          guesses ++;
+          document.getElementById("output").value = "Your guess is too high. " + "     " +  " You have" + " " + (totalGuesses-guesses-1) + " " + "guesses";
+
+        } 
+        else {
+            document.getElementById("output").value = "Your guess is too low." + " " + " You have" + " " + (totalGuesses-guesses-1) + " " + "guesses";
+            guesses ++;
+
+        } 
+        //Overide all previous commands and check if the user has used all the available guesses, if not continue on
+        if (guesses>=totalGuesses){
+            document.getElementById("output").value = " ";
+            document.getElementById("output").value = "Game Over";
+
+        } 
+
+    }
+    
+
+    function bonusButton (bonusNumber) {
+        //This is a function I have burrowed from Stack Overflow URL:https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array The author is Fisher Yates
+        function shuffle(array) {
+        var currentIndex = array.length, temporaryValue, randomIndex;
+        // While there remain elements to shuffle...
+        while (0 !== currentIndex) {
+            // Pick a remaining element...
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+
+            // And swap it with the current element.
+            temporaryValue = array[currentIndex];
+            array[currentIndex] = array[randomIndex];
+            array[randomIndex] = temporaryValue;
+             }
+
+            return array;
+            }
+            //This is the end of the code that I have burrowed
+            //Shuffle the array and assign it a value
+            var newBonusArray = shuffle(bonusArray);
+            //Assign what the low range number the monster is at
+            var monsterMinus = monsterLocation-50-Math.floor(Math.random() * 100);
+            //Estable what the max range number the monster is at
+            var monsterPlus =  monsterLocation+50+Math.floor(Math.random() * 100);
+            //Make sure the low or high range number is not invalid
+            if (monsterMinus<0){
+                monsterMinus = 0;
+            }
+            if (monsterPlus>1000) {
+                monsterPlus = 1000;
+            }
+            //get the element at a random location in bonus array
+            for (i=0;i<=bonusNumber;i++){
+                var bonusApply = newBonusArray[i];
+            }
+            //Check to see if the bonys applies, T stands for True, F stands for False, provide feedback based on result of for loop
+            if (bonusApply == "T"){
+                bonusCounter++;
+                document.getElementById("bonus").value = "Congrats you have qualified for the bonus! The location is between" + " " + monsterMinus + " and " + monsterPlus;
+            } else if (bonusApply == "F"){
+                bonusCounter++;
+                document.getElementById("bonus").value = "Sorry, better luck next time.";
+            }
+            //Makes it so that the user can't spam bonus button
+            if (bonusCounter>=2){
+                document.getElementById("bonus").value = "You have already used your bonus";
+            }
+            if (bonusNumber>=8 || bonusNumber<0){
+                document.getElementById("bonus").value = "Please enter number that is in between 0 and 8 (includes O)";
+            }
+            //returns the element which was given by the loop
+            return bonusApply;
+        }
+    function bonusAnalysis (bonusCheck){
+        //call bonus button to see what element will be returned
+        bonusTestElement = bonusButton(bonusCheck);
+        //assign bonusCounter to 0 so user can still use real hint
+        bonusCounter = 0;
+        document.getElementById("bonus").value = "";
+        //based on the result of calling bonusButton, the user recieves a message
+        if (bonusTestElement == "T"){
+            document.getElementById("bonus").value = "";
+            document.getElementById("bonusTest").value = "You are a lucky one";
+        }
+        else {
+            document.getElementById("bonus").value = "";
+            document.getElementById("bonusTest").value = "Your luck did not show up :(";
+        }
+    }
+            
+</script>
+</body>
+</html>
